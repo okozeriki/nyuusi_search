@@ -21,11 +21,13 @@ def get_key(my_dict,val):
                 return key
  
     return "There is no such Key"
+@st.cache
 def in_search(txtfile,bunya):
     f = open(txtfile, 'r')
     txt=f.read()
     if any(x in txt for x in iden[bunya]):
         return txtfile
+@st.cache
 def from_search_tolist(path,bunya):
     A=[]
     for pref in only_dir(path):
@@ -37,6 +39,7 @@ def from_search_tolist(path,bunya):
                     if not in_search(os.path.join(c2,tfile),bunya)==None:
                         A.append(in_search(os.path.join(c2,tfile),bunya))
     return A
+@st.cache
 def key_from_search_tolist(path,keywoard):
     A=[]
     for pref in only_dir(path):
@@ -50,6 +53,7 @@ def key_from_search_tolist(path,keywoard):
                     if keywoard in txt:
                         A.append(os.path.join(c2,tfile))
     return A
+@st.cache
 def key_list_from_search_tolist(path,_list):
     A=[]
     for pref in only_dir(path):
@@ -63,6 +67,7 @@ def key_list_from_search_tolist(path,_list):
                     if all(x in txt for x in b):
                         A.append(os.path.join(c2,tfile))
     return A
+@st.cache
 def any_from_search_tolist(path,_list):
     A=[]
     for pref in only_dir(path):
@@ -76,7 +81,7 @@ def any_from_search_tolist(path,_list):
                     if any(x in txt for x in _list):
                         A.append(os.path.join(c2,tfile))
     return A
-                        
+@st.cache                       
 def re_search(p,source):
     m = re.search(p, source)
     return m.group(1)
@@ -265,7 +270,7 @@ for pref in only_dir(path):
 A=[c[a] for a in A]
 
 
-
+@st.cache
 def dict_path_list(A):
 ##pathをuniqueに抜き出してくる
     p1=r'intan/(.*)/(\d)'
@@ -277,7 +282,7 @@ def dict_path_list(A):
         path_=os.path.join(path,pref_name,year)
         path_list.append(path_)
     return path_list
-
+@st.cache
 def zisyo_unique_num(path_list):
     zisyo={}
     for i in list(set(path_list)):
@@ -287,7 +292,7 @@ def zisyo_unique_num(path_list):
                 k.append(a)
         zisyo[i]=natsorted(k)
     return zisyo
-
+@st.cache
 def new_random(num):
     A_b=[]
     p1=r'intan/(.*)/(\d)'
@@ -356,10 +361,11 @@ for i in range(len(A)-1):
             image_answer=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
             Af.append(os.path.join(_path,[i for i in natsorted(os.listdir(_path))if i.startswith('z')][0]))
 
-
-            
-            
-def all_path():  
+st.write(A)
+st.write('Af')
+st.write(Af)            
+@st.cache           
+def all_path():#pathのlistを全て返す
     c2_list=[]
     for pref in only_dir(path):
         c1=os.path.join(path,pref)
@@ -367,17 +373,19 @@ def all_path():
             c2=os.path.join(c1,year)
             c2_list.append(c2)
     return c2_list
-
-def path_par_num(c2_list):
+@st.cache
+def path_par_num(c2_list):#pathごとのanswerと問題の数
     prefnum_zisyo={}
     for i in c2_list:
-        if not len([t for t in A if i in t])==0:
-            prefnum_zisyo[i]=len([t for t in A if i in t])+len([s for s in  os.listdir(i) if s.startswith('z')])
+        if not len([t for t in A[:-1] if i in t])==0:
+            prefnum_zisyo[i]=len([t for t in A[:-1] if i in t])+len([s for s in  os.listdir(i) if s.startswith('z')])
     return prefnum_zisyo
 
+st.write(path_par_num(all_path()))
 pdf='test.jpg'
 
 ##奇数の値を取り出す→リストに格納
+@st.cache
 def insert_kisuu(prefnum_zisyo,all_list):
     for k,v in prefnum_zisyo.items():
         if v%2==1:
@@ -395,3 +403,4 @@ with open("text.pdf", "rb") as file:
     data=file,
     file_name=f"{keywoard}.pdf",
     mime="application/octet-stream")
+
