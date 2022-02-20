@@ -314,56 +314,55 @@ if not answer_random:
         A=new_random(d_num)
  
        
+@st.cache(allow_output_mutation=True)
+def af_(A):
+    Af=[]
+    # A=random.sample(A,len(A))
+    for i in range(len(A)-1):  
+        k=A[i]
+        k1=A[i+1]
+        #### 表現
+        p = r'intan/(.*)/(\d)'
+        pref_name=re_search(p,k)
+        pref_1=re_search(p,k1)
+        p1=r'(\d{4})'
+        year_name=re_search(p1,k)
+        year_1=re_search(p1,k1)
+#         col1,col2,col3=st.columns([1,1,3])
+#         with col1:
+#             st.subheader(pre_dict[pref_name])
+#         with col2:
+#             st.subheader(f'{year_name}年')
+#         image=Image.open(k)
+#         st.image(image)
+        Af.append(k)
 
+        _path=os.path.join(path,pref_name,year_name)
+        _path1=os.path.join(path,pref_1,year_1)
+        if not _path==_path1:
+            if len([i for i in os.listdir(_path)if i.startswith('z')])==2:
+#                 image_answer1=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
+#                 image_answer2=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][1]))
+                if not answer_binary:
+#                     st.write('解答')
+#                     st.image(image_answer1)
+#                     st.image(image_answer2)
+                    Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
+                    Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][1]))
+            else:##同じだったら解答を入れ込まない
+#                 image_answer=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
+                if not answer_binary:
+#                     st.write('解答')
+#                     st.image(image_answer)
+                    Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
+        else:##末尾に途中のやつが来てしまった場合
+            if i==len(A)-2:
+                Af.append(k1)
+#                 image_answer=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
+                Af.append(os.path.join(_path,[i for i in natsorted(os.listdir(_path))if i.startswith('z')][0]))
+    return Af
 
-Af=[]
-# A=random.sample(A,len(A))
-for i in range(len(A)-1):  
-    k=A[i]
-    k1=A[i+1]
-    #### 表現
-    p = r'intan/(.*)/(\d)'
-    pref_name=re_search(p,k)
-    pref_1=re_search(p,k1)
-    p1=r'(\d{4})'
-    year_name=re_search(p1,k)
-    year_1=re_search(p1,k1)
-    col1,col2,col3=st.columns([1,1,3])
-    with col1:
-        st.subheader(pre_dict[pref_name])
-    with col2:
-        st.subheader(f'{year_name}年')
-    image=Image.open(k)
-    st.image(image)
-    Af.append(k)
-
-    _path=os.path.join(path,pref_name,year_name)
-    _path1=os.path.join(path,pref_1,year_1)
-    if not _path==_path1:
-        if len([i for i in os.listdir(_path)if i.startswith('z')])==2:
-            image_answer1=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-            image_answer2=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][1]))
-            if not answer_binary:
-                st.write('解答')
-                st.image(image_answer1)
-                st.image(image_answer2)
-                Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-                Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][1]))
-        else:##同じだったら解答を入れ込まない
-            image_answer=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-            if not answer_binary:
-                st.write('解答')
-                st.image(image_answer)
-                Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-    else:##末尾に途中のやつが来てしまった場合
-        if i==len(A)-2:
-            Af.append(k1)
-            image_answer=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-            Af.append(os.path.join(_path,[i for i in natsorted(os.listdir(_path))if i.startswith('z')][0]))
-
-st.write(A)
-st.write('Af')
-st.write(Af)            
+Af=af_(A)        
 @st.cache           
 def all_path():#pathのlistを全て返す
     c2_list=[]
