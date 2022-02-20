@@ -7,8 +7,6 @@ import random
 import img2pdf
 import time
 
-
-
 def only_dir(path):
     return [i for i in os.listdir(path)if os.path.isdir(os.path.join(path,i))if not i.startswith('.')]
 def only_file(path):
@@ -21,38 +19,7 @@ def get_key(my_dict,val):
                 return key
  
     return "There is no such Key"
-@st.cache
-def in_search(txtfile,bunya):
-    f = open(txtfile, 'r')
-    txt=f.read()
-    if any(x in txt for x in iden[bunya]):
-        return txtfile
-@st.cache
-def from_search_tolist(path,bunya):
-    A=[]
-    for pref in only_dir(path):
-        c1=os.path.join(path,pref)
-        for year in only_dir(c1):
-            c2=os.path.join(c1,year)
-            if sum(os.path.isfile(os.path.join(c2,name))for name in os.listdir(c2) if not name.startswith('.')if name.endswith('.txt'))>=1:
-                for tfile in natsorted(specific_get_ext(only_file(c2),'txt')):
-                    if not in_search(os.path.join(c2,tfile),bunya)==None:
-                        A.append(in_search(os.path.join(c2,tfile),bunya))
-    return A
-@st.cache
-def key_from_search_tolist(path,keywoard):
-    A=[]
-    for pref in only_dir(path):
-        c1=os.path.join(path,pref)
-        for year in only_dir(c1):
-            c2=os.path.join(c1,year)
-            if sum(os.path.isfile(os.path.join(c2,name))for name in os.listdir(c2) if not name.startswith('.')if name.endswith('.txt'))>=1:
-                for tfile in natsorted(specific_get_ext(only_file(c2),'txt')):
-                    f = open(os.path.join(c2,tfile), 'r')
-                    txt=f.read()
-                    if keywoard in txt:
-                        A.append(os.path.join(c2,tfile))
-    return A
+
 @st.cache
 def key_list_from_search_tolist(path,_list):
     A=[]
@@ -81,110 +48,14 @@ def any_from_search_tolist(path,_list):
                     if any(x in txt for x in _list):
                         A.append(os.path.join(c2,tfile))
     return A
-@st.cache                       
+                    
 def re_search(p,source):
     m = re.search(p, source)
     return m.group(1)
-DATA='''北海道
-青森県
-岩手県
-宮城県
-秋田県
-山形県
-福島県
-茨城県
-栃木県
-群馬県
-埼玉県
-千葉県
-東京都
-神奈川県
-新潟県
-富山県
-石川県
-福井県
-山梨県
-長野県
-岐阜県
-静岡県
-愛知県
-三重県
-滋賀県
-京都府
-大阪府
-兵庫県
-奈良県
-和歌山県
-鳥取県
-島根県
-岡山県
-広島県
-山口県
-徳島県
-香川県
-愛媛県
-高知県
-福岡県
-佐賀県
-長崎県
-熊本県
-大分県
-宮崎県
-鹿児島県
-沖縄県
-'''
-data='''hokkaido
-aomori
-iwate
-miyagi
-akita
-yamagata
-fukushima
-ibaraki
-tochigi
-gunma
-saitama
-chiba
-tokyo
-kanagawa
-niigata
-toyama
-ishikawa
-fukui
-yamanashi
-nagano
-gifu
-shizuoka
-aichi
-mie
-shiga
-kyoto
-osaka
-hyogo
-nara
-wakayama
-tottori
-shimane
-okayama
-hiroshima
-yamaguchi
-tokushima
-kagawa
-ehime
-kochi
-fukuoka
-saga
-nagasaki
-kumamoto
-oita
-miyazaki
-kagoshima
-okinawa
-'''
+prefecture=['北海道','青森県','岩手県','宮城県','秋田県','山形県','福島県','茨城県','栃木県','群馬県','埼玉県','千葉県','東京都','神奈川県','新潟県','富山県','石川県','福井県','山梨県','長野県','岐阜県','静岡県','愛知県','三重県','滋賀県','京都府','大阪府','兵庫県','奈良県','和歌山県','鳥取県','島根県','岡山県','広島県','山口県','徳島県','香川県','愛媛県','高知県','福岡県','佐賀県','長崎県','熊本県','大分県','宮崎県','鹿児島県',
+ '沖縄県']
 
-
-prefecture = re.findall(r'(\w+)\n',DATA)
-_prefecture=re.findall(r'(\w+)\n',data)
+_prefecture=['hokkaido','aomori','iwate','miyagi','akita','yamagata','fukushima','ibaraki','tochigi','gunma','saitama','chiba','tokyo','kanagawa','niigata','toyama','ishikawa','fukui','yamanashi','nagano','gifu','shizuoka','aichi','mie','shiga','kyoto','osaka','hyogo','nara','wakayama','tottori','shimane','okayama','hiroshima','yamaguchi','tokushima','kagawa','ehime','kochi','fukuoka','saga','nagasaki','kumamoto','oita','miyazaki','kagoshima','okinawa']
 A=[]
 pre_dict={}
 for i,k in zip(prefecture,_prefecture):
@@ -201,16 +72,17 @@ chemistry_n={'いろいろな物質':['有機物','無機物','伝導性','光�
 physical=['光の進め方','凸レンズ','音','力','圧力','電子','電流と電圧','オームの法則','電流による発熱','磁界','力の釣り合い、合成分解','物体の運動','仕事','エネルギー']
 physical_n={'光の進め方':['光'],'凸レンズ':['焦点'],'音':['音'],'力':['力'],'圧力':['圧力'],'電子':['電子'],'電流と電圧':['電圧'],'オームの法則':['アンペア'],'電流による発熱':['発熱'],'磁界':['磁界'],'力の釣り合い、合成分解':['分解'],'物体の運動':['運動'],'仕事':['仕事'],'エネルギー':['エネルギー']}
 
+st.header('過去問検索アプリ')
 
-
+st.sidebar.subheader('検索条件')
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
-d_num = st.slider('希望のpage数を入力してください', 0, 130, 25)
-genre = st.radio(
+d_num = st.sidebar.slider('希望のpage数を入力してください', 0, 100, 10)
+genre = st.sidebar.radio(
      "",
      ('分野検索','キーワード検索'))
 
 if genre=='分野検索':
-    genre_science=st.radio(label='',options=['生物','地学','化学','物理'])
+    genre_science=st.sidebar.radio(label='',options=['生物','地学','化学','物理'])
     if genre_science=='生物':
         fourgenre=biology
     if genre_science=='地学':
@@ -248,26 +120,34 @@ if genre=='分野検索':
     keywoard=bi
     A=any_from_search_tolist(path,iden[bi])
 
-z1,z2,z3=st.columns([2,2,3])
+z1,z2=st.columns([1,1])
 with z1:
-    answer_binary=st.checkbox('解答を表示しない')
+    answer_binary=st.sidebar.checkbox('解答を表示しない')
 with z2:
-    answer_random=st.checkbox('randomにしない')
+    answer_random=st.sidebar.checkbox('randomにしない')
 
 container=st.container()
 
-c={}
-for pref in only_dir(path):
-    c1=os.path.join(path,pref)
-    for year in only_dir(c1):
-        c2=os.path.join(c1,year)
-        k2=[os.path.join(c2,i) for i in natsorted(os.listdir(c2)) if i.startswith('t')if i.endswith('.jpg')]
-        k1=[os.path.join(c2,i) for i in natsorted(os.listdir(c2)) if i.endswith('.txt')]
-        for i,k in zip(k1,k2):
-            c[i]=k
+@st.cache
+def from_text_to_jpg():
+    c={}
+    for pref in only_dir(path):
+        c1=os.path.join(path,pref)
+        for year in only_dir(c1):
+            c2=os.path.join(c1,year)
+            k2=[os.path.join(c2,i) for i in natsorted(os.listdir(c2)) if i.startswith('t')if i.endswith('.jpg')]
+            k1=[os.path.join(c2,i) for i in natsorted(os.listdir(c2)) if i.endswith('.txt')]
+            for i,k in zip(k1,k2):
+                c[i]=k
+    return c
+
+c=from_text_to_jpg()
 
 
 A=[c[a] for a in A]
+
+
+###p1,p2の辞書を作る。
 
 
 @st.cache
@@ -314,55 +194,35 @@ if not answer_random:
         A=new_random(d_num)
  
        
-@st.cache(allow_output_mutation=True)
-def af_(A):
-    Af=[]
-    # A=random.sample(A,len(A))
-    for i in range(len(A)-1):  
-        k=A[i]
-        k1=A[i+1]
-        #### 表現
-        p = r'intan/(.*)/(\d)'
-        pref_name=re_search(p,k)
-        pref_1=re_search(p,k1)
-        p1=r'(\d{4})'
-        year_name=re_search(p1,k)
-        year_1=re_search(p1,k1)
-#         col1,col2,col3=st.columns([1,1,3])
-#         with col1:
-#             st.subheader(pre_dict[pref_name])
-#         with col2:
-#             st.subheader(f'{year_name}年')
-#         image=Image.open(k)
-#         st.image(image)
-        Af.append(k)
 
-        _path=os.path.join(path,pref_name,year_name)
-        _path1=os.path.join(path,pref_1,year_1)
-        if not _path==_path1:
-            if len([i for i in os.listdir(_path)if i.startswith('z')])==2:
-#                 image_answer1=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-#                 image_answer2=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][1]))
-                if not answer_binary:
-#                     st.write('解答')
-#                     st.image(image_answer1)
-#                     st.image(image_answer2)
-                    Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-                    Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][1]))
-            else:##同じだったら解答を入れ込まない
-#                 image_answer=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-                if not answer_binary:
-#                     st.write('解答')
-#                     st.image(image_answer)
-                    Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-        else:##末尾に途中のやつが来てしまった場合
-            if i==len(A)-2:
-                Af.append(k1)
-#                 image_answer=Image.open(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
-                Af.append(os.path.join(_path,[i for i in natsorted(os.listdir(_path))if i.startswith('z')][0]))
-    return Af
 
-Af=af_(A)        
+Af=[]
+# A=random.sample(A,len(A))
+for i in range(len(A)-1):  
+    k=A[i]
+    k1=A[i+1]
+    #### 表現
+    p = r'intan/(.*)/(\d)'
+    pref_name=re_search(p,k)
+    pref_1=re_search(p,k1)
+    p1=r'(\d{4})'
+    year_name=re_search(p1,k)
+    year_1=re_search(p1,k1)
+    Af.append(k)
+    _path=os.path.join(path,pref_name,year_name)
+    _path1=os.path.join(path,pref_1,year_1)
+    if not _path==_path1:
+        if len([i for i in os.listdir(_path)if i.startswith('z')])==2:
+            if not answer_binary:
+                Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
+                Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][1]))
+        else:##同じだったら解答を入れ込まない
+            if not answer_binary:
+                Af.append(os.path.join(_path,[i for i in os.listdir(_path)if i.startswith('z')][0]))
+    else:##末尾に途中のやつが来てしまった場合
+        if i==len(A)-2:
+            Af.append(k1)
+            Af.append(os.path.join(_path,[i for i in natsorted(os.listdir(_path))if i.startswith('z')][0]))
 @st.cache           
 def all_path():#pathのlistを全て返す
     c2_list=[]
@@ -380,7 +240,7 @@ def path_par_num(c2_list):#pathごとのanswerと問題の数
             prefnum_zisyo[i]=len([t for t in A[:-1] if i in t])+len([s for s in  os.listdir(i) if s.startswith('z')])
     return prefnum_zisyo
 
-st.write(path_par_num(all_path()))
+
 pdf='test.jpg'
 
 ##奇数の値を取り出す→リストに格納
@@ -394,6 +254,7 @@ def insert_kisuu(prefnum_zisyo,all_list):
 
 Af=insert_kisuu(path_par_num(all_path()),Af)
 
+container.success('下記のボタンからダウンロード可能です　')
 with open('text.pdf',"wb") as f:
     f.write(img2pdf.convert([Image.open(i).filename for i in Af]))
 with open("text.pdf", "rb") as file:
@@ -402,4 +263,3 @@ with open("text.pdf", "rb") as file:
     data=file,
     file_name=f"{keywoard}.pdf",
     mime="application/octet-stream")
-
